@@ -170,6 +170,7 @@ const hit pachelbelcanonind100[] = {
   
 };
 
+const hit micancion[] = {};
 
 float acalculateDuration(float duration)
 {

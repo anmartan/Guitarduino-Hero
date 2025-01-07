@@ -1,96 +1,101 @@
+#include <LiquidCrystal.h>
+
+LiquidCrystal lcd(7,6,5,4,3,2);
+int joystickYAxis = A1;
+int joystickButton = 8;
+
 class Menu 
 {
 public:
-    struct songInfo
-    {
-        std::string name = "";
-        int highScore = 0;
-    };
-    songInfo songs[5];  // poner aqui las que sean
-    int sizeOfArray;    // solo para no estar haciendo sizeof todo el rato    
-    int songDisplayed;  // indice de la que se esta mostrando 
+  struct songInfo
+  {
+    String name;
+    int highScore;
+  };
 
-    Menu()
+  songInfo songs[5];  // poner aqui las que sean
+
+  int sizeOfArray;    // solo para no estar haciendo sizeof todo el rato    
+  int songDisplayed;  // indice de la que se esta mostrando 
+
+  Menu()
+  {
+    songs[0] = { "primera", 50 };
+    songs[1] = { "segunda", 150 };
+    songs[2] = { "tercera", 250 };
+    songs[3] = { "cuarta", 520 };
+    songs[4] = { "quinta", 350 };
+    
+    lcd.begin(16,2);
+    songDisplayed = 0;
+    sizeOfArray = sizeof(songs) / sizeof(songInfo);
+  }
+
+  void move(bool next)
+  {
+    if (next) songDisplayed = (songDisplayed + 1) % sizeOfArray;
+    else 
     {
-        songs[0] = { "primera", 50 };
-        songs[1] = { "segunda", 150 };
-        songs[2] = { "tercera", 250 };
-        songs[3] = { "cuarta", 520 };
-        songs[4] = { "quinta", 350 };
-        songDisplayed = 0;
-        sizeOfArray = sizeof(songs) / sizeof(songInfo);
+      if (songDisplayed <= 0) songDisplayed = sizeOfArray;
+      songDisplayed--;
     }
+  }
 
-    void move(bool next)
-    {
-        if (next) songDisplayed = (songDisplayed + 1) % sizeOfArray;
-        else 
-        {
-            if (songDisplayed <= 0) songDisplayed = sizeOfArray;
-            songDisplayed--;
-        }
-    }
+  void show()
+  {
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print(songs[songDisplayed].name);
 
-    void show()
-    {
-        std::cout << songs[songDisplayed].name << "   " << songs[songDisplayed].highScore << "\n";
-    }
+    lcd.setCursor(0,1);
+    lcd.print(songs[songDisplayed].highScore);
+  }
 
-    void update(int score)
-    {
-        if (score > songs[songDisplayed].highScore)
-            songs[songDisplayed].highScore = score;
-    }
+  void update(int score)
+  {
+    if (score > songs[songDisplayed].highScore)
+      songs[songDisplayed].highScore = score;
+  }
 
-    songInfo select() 
-    {
-        return songs[songDisplayed];
-    }
+  songInfo select() 
+  {
+    return songs[songDisplayed];
+  }
 
+  void clear()
+  {
+    lcd.clear();
+  }
 };
+
+Menu menu;
 
 void setup()
 {
-
+  pinMode(joystickButton , INPUT_PULLUP);
+    menu.show();
 }
 
 void loop()
 {
-  
-}
+  int Xvalue = 0;
+  int Yvalue = 0;
+  bool buttonValue = false;
 
-static std::string getAnswer()
-{
-    std::string answer;
-    std::cin >> answer;
-    return answer;
-}
-
-int main()
-{
-    Menu menu;
-    Menu::songInfo chosenSong;
-
-    while (true)
-    {
-        menu.show();
-        std::chrono::seconds timeout(2);
-
-        std::string answer = "n"; //default to maybe
-        std::future<std::string> future = std::async(getAnswer);
-        if (future.wait_for(timeout) == std::future_status::ready)
-        {
-            answer = future.get();
-            if (answer == "a") menu.move(true);
-            else if (answer == "s") menu.move(false);
-            else if (answer == "q") 
-            {
-                chosenSong = menu.select();
-                break;
-            }
-
-        }
-    }
-
-    std::cout << "Chosen song was: " << chosenSong.name;
+  Yvalue = analogRead(joystickYAxis);
+  if(Yvalue < 100) 
+  {
+    menu.move(false);
+    menu.show();
+    delay(250);
+  }
+  else if (Yvalue > 850) 
+  {
+    menu.move(true);
+    menu.show();
+    delay(250);
+  }
+  else{
+    delay(100);
+  }
 }

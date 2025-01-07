@@ -13,10 +13,6 @@
 //     .SCLK = 6
 // };
 
-// /*
-//  * setup() - this function runs once when you turn your Arduino on
-//  * We initialize the serial connection with the computer
-//  */
 // void setup() 
 // {
 //   // Set all the pins of 74HC595 as OUTPUT
@@ -24,11 +20,6 @@
 //     pinMode( sr1.RCLK, OUTPUT);
 //     pinMode( sr1.SCLK, OUTPUT);
 // }
-
-// /*
-//  * loop() - this function runs over and over again
-//  */
-
 
 // void writeVal ( const Shift_Register_595N * const sr , uint16_t val )
 // {
