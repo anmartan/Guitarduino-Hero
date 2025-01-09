@@ -7,9 +7,7 @@ const int IN_2=A2;
 const int IN_1=A1;
 const int IN_0=A0;
 
-int currentScore = 0;
-float multiplierAcrossNotes = 1;
-float multiplierCurrentNote = 1;
+float currentScore = 0;
 
 uint32_t lastTime;
 float deltaTime;
@@ -91,8 +89,6 @@ void ledsReset()
   currentHit = 0;
   lastTransition = 0;
   currentScore = 0;
-  multiplierAcrossNotes = 1;
-  multiplierCurrentNote = 1;
   
   lastTime = millis();
   hitTimestamp = lastTime;
@@ -103,29 +99,20 @@ void setScore(int input)
   // The more time the input is correct, the more rewarding it is
   if(cancion[currentHit].canal == input)
   {
-    currentScore += 1 * multiplierCurrentNote * multiplierAcrossNotes;
-
-    multiplierCurrentNote += 0.1f;
+    currentScore += 0.5f;
     
     digitalWrite(BIEN,1);
     digitalWrite(MAL,0);
-  }
-
-  // If failing, the multipliers are reset
-  else
+    menu.showScore(currentScore);
+  }  else // If failing, the multipliers are reset
   {
-    multiplierCurrentNote = 1;
-    multiplierAcrossNotes = 1;
+    Serial.println("Algo toca que esta mal " + String(input));
 
     digitalWrite(BIEN,0);
     digitalWrite(MAL,1);
   }
 }
-/*
-int currentScore = 0;
-float multiplierAcrossNotes = 1;
-float multiplierCurrentNote = 1;
-*/
+
 void checkInput(){
   digitalWrite(MAL,0);
   digitalWrite(BIEN,0);
@@ -152,6 +139,7 @@ bool ledsLoop() {
     if(songIsOver){
       noTone(PIN);
       clearLEDs();
+      menu.update(currentScore);
       return false;
     } 
     nextHit();

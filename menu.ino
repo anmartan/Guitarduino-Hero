@@ -47,7 +47,13 @@ public:
     lcd.setCursor(0,1);
     lcd.print(songs[songDisplayed].highScore);
   }
+  void showScore(float score)
+  {
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print(score);
 
+  }
   void update(int score)
   {
     if (score > songs[songDisplayed].highScore)
@@ -69,7 +75,6 @@ Menu menu;
 
 void menuSetup()
 {
-  Serial.begin(9600);
   pinMode(joystickButton , INPUT_PULLUP);
   menu.show();
 }
@@ -80,7 +85,6 @@ bool menuLoop()
   int buttonValue = 0;
 
   Yvalue = analogRead(joystickYAxis);
-  Serial.println(Yvalue);
   if(Yvalue < 100) 
   {
     menu.move(false);

@@ -5,7 +5,7 @@ bool inMenu = true;
 
 void setup() 
 {
-Serial.begin(9600);
+  Serial.begin(9600);
   menuSetup();
   ledsSetup();
 }
