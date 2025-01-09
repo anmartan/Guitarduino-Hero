@@ -132,7 +132,7 @@ const hit enemy[]= {
   {REST, 1,-1}
 };
 
-const hit pachelbelcanonind100[] = {
+const hit micancion[] = {
   
   {NOTE_FS4,2}, {NOTE_E4,2},
   {NOTE_D4,2}, {NOTE_CS4,2},
@@ -166,11 +166,9 @@ const hit pachelbelcanonind100[] = {
   {NOTE_A3,8}, {NOTE_B3,4}, {NOTE_G3,4}, {NOTE_B3,8}, {NOTE_A3,8}, {NOTE_B3,4},
   {NOTE_CS4,8}, {NOTE_D4,8}, {NOTE_A3,8}, {NOTE_B3,8}, {NOTE_CS4,8}, {NOTE_D4,8}, {NOTE_E4,8},
   {NOTE_FS4,8}, {NOTE_G4,8}, {NOTE_A4,2},  
-   
-  
 };
 
-const hit micancion[] = {};
+const hit pachelbelcanonind100[] = {};
 
 float acalculateDuration(float duration)
 {
@@ -185,28 +183,37 @@ void anextHit(){
   alastTransition = alastTime;
 }
 
-// void setup() {
-//   pinMode(aPIN, OUTPUT);
+void soundSetup() {
+  pinMode(aPIN, OUTPUT);
 
-//   alastTime = millis();
-//   ahitTimestamp = alastTime;
-// }
+  alastTime = millis();
+  ahitTimestamp = alastTime;
+}
 
-
-// void loop() {
-//   bool songIsOver = acurrentHit+1 == sizeof(micancion)/sizeof(hit);
+void soundReset()
+{
+  acurrentHit = 0;
+  alastTransition = 0;
   
-//   adeltaTime = (millis() - alastTime) / 1000;
-//   alastTime = millis();
-//   float nextTransition= ahitTimestamp + acalculateDuration(micancion[acurrentHit].duracion);
-//   bool nextIsSilence = songIsOver || micancion[acurrentHit + 1].nota == 0;
-//   bool currentIsSilence = micancion[acurrentHit].nota == 0;
+  alastTime = millis();
+  ahitTimestamp = alastTime;
+}
+
+bool soundLoop() {
+  bool songIsOver = acurrentHit+1 == sizeof(micancion)/sizeof(hit);
   
-//   if(nextTransition < alastTime)
-//   {
-//     if(songIsOver){
-//       exit(0);
-//     } 
-//     anextHit();
-//   }
-// }
+  adeltaTime = (millis() - alastTime) / 1000;
+  alastTime = millis();
+  float nextTransition= ahitTimestamp + acalculateDuration(micancion[acurrentHit].duracion);
+  bool nextIsSilence = songIsOver || micancion[acurrentHit + 1].nota == 0;
+  bool currentIsSilence = micancion[acurrentHit].nota == 0;
+  
+  if(nextTransition < alastTime)
+  {
+    if(songIsOver){
+      return false;
+    } 
+    anextHit();
+  }
+  return true;
+}

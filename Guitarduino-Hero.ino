@@ -1,11 +1,20 @@
+bool inMenu = false;
 
-void mysetup() {
+void setup() {
   // put your setup code here, to run once:
+  menuSetup();
   ledsSetup();
 }
 
-void myloop() {
+void loop() {
   // put your main code here, to run repeatedly:
-  while(ledsLoop());
-  exit(0);
+  if(inMenu){
+    while(menuLoop());
+  }
+  else
+  {
+    ledsReset();
+    while(ledsLoop());
+  }
+  //inMenu = !inMenu;
 }

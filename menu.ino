@@ -70,17 +70,16 @@ public:
 
 Menu menu;
 
-void setup()
+void menuSetup()
 {
   pinMode(joystickButton , INPUT_PULLUP);
-    menu.show();
+  menu.show();
 }
 
-void loop()
+bool menuLoop()
 {
-  int Xvalue = 0;
   int Yvalue = 0;
-  bool buttonValue = false;
+  int buttonValue = 0;
 
   Yvalue = analogRead(joystickYAxis);
   if(Yvalue < 100) 
@@ -88,14 +87,22 @@ void loop()
     menu.move(false);
     menu.show();
     delay(250);
+    return true;
   }
   else if (Yvalue > 850) 
   {
     menu.move(true);
     menu.show();
     delay(250);
+    return true;
   }
-  else{
-    delay(100);
+
+  buttonValue = digitalRead(joystickButton);
+  if(!buttonValue)
+  {
+    menu.select();
+    return false;
   }
+  delay(100);
+  return true;
 }
