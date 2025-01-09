@@ -1,20 +1,26 @@
-bool inMenu = false;
+#include "pitches.h"
+#include "data.h"
 
-void setup() {
-  // put your setup code here, to run once:
+bool inMenu = true;
+
+void setup() 
+{
+Serial.begin(9600);
   menuSetup();
   ledsSetup();
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
+void loop() 
+{
   if(inMenu){
     while(menuLoop());
+    inMenu = !inMenu;
   }
   else
   {
     ledsReset();
     while(ledsLoop());
+    
+    inMenu = true;
   }
-  //inMenu = !inMenu;
 }

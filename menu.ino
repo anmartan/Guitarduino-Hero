@@ -1,17 +1,14 @@
+#pragma once
 #include <LiquidCrystal.h>
 
-LiquidCrystal lcd(7,6,5,4,3,2);
-int joystickYAxis = A1;
-int joystickButton = 8;
+LiquidCrystal lcd(2,3,7,8,9,10);
+int joystickYAxis = A4;
+int joystickButton = A5;
 
 class Menu 
 {
 public:
-  struct songInfo
-  {
-    String name;
-    int highScore;
-  };
+
 
   songInfo songs[5];  // poner aqui las que sean
 
@@ -72,6 +69,7 @@ Menu menu;
 
 void menuSetup()
 {
+  Serial.begin(9600);
   pinMode(joystickButton , INPUT_PULLUP);
   menu.show();
 }
@@ -82,6 +80,7 @@ bool menuLoop()
   int buttonValue = 0;
 
   Yvalue = analogRead(joystickYAxis);
+  Serial.println(Yvalue);
   if(Yvalue < 100) 
   {
     menu.move(false);
@@ -103,6 +102,7 @@ bool menuLoop()
     menu.select();
     return false;
   }
+  menu.show();
   delay(100);
   return true;
 }
